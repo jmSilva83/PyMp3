@@ -1,0 +1,74 @@
+# Descargador de Audio de YouTube
+
+Este es un sencillo script de Python que te permite descargar audio de videos de YouTube, ya sea una sola canción o una playlist completa. El audio se convierte y guarda en formato MP3.
+
+## Características
+
+- Descarga de videos individuales o playlists completas.
+- Convierte el audio a formato MP3 con una calidad de 192 kbps.
+- Guarda los archivos en una carpeta `descargas` en el mismo directorio del script.
+- Manejo de interrupciones con `Ctrl+C` para detener la descarga de forma segura.
+
+## Problemas Conocidos
+
+- **La verificación de duplicados no funciona para canciones individuales:** Al elegir la opción 2 (descargar solo una canción), el script no puede verificar si la canción ya existe y la descargará de nuevo. Esta función sí opera correctamente para playlists completas.
+
+## Requisitos
+
+Para utilizar este script, necesitas tener instalado lo siguiente:
+
+- Python 3.6 o superior
+- `yt-dlp`: una herramienta de línea de comandos para descargar videos de YouTube y otros sitios.
+- `ffmpeg`: una herramienta esencial para la conversión de audio y video.
+
+## Instalación
+
+Sigue estos pasos para preparar tu entorno:
+
+1.  **Clona o descarga este repositorio.**
+
+2.  **Instala las dependencias de Python.**
+    Navega hasta el directorio del proyecto en tu terminal y ejecuta:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3.  **Instala `ffmpeg`.**
+    `ffmpeg` es necesario para la conversión de audio. Debes descargarlo y asegurarte de que esté accesible desde la línea de comandos (es decir, que esté en el PATH de tu sistema).
+
+    -   **En Windows:**
+        1.  Descarga `ffmpeg` desde [el sitio oficial](https://ffmpeg.org/download.html).
+        2.  Descomprime el archivo en una ubicación de tu preferencia (por ejemplo, `C:\ffmpeg`).
+        3.  Añade la carpeta `bin` de `ffmpeg` (ej. `C:\ffmpeg\bin`) a la variable de entorno PATH de tu sistema.
+
+    -   **En macOS (usando Homebrew):**
+        ```bash
+        brew install ffmpeg
+        ```
+
+    -   **En Linux (usando `apt` en sistemas Debian/Ubuntu):**
+        ```bash
+        sudo apt-get update
+        sudo apt-get install ffmpeg
+        ```
+
+## Modo de Uso
+
+Una vez que hayas completado la instalación, puedes ejecutar el script desde tu terminal:
+
+```bash
+python downloader.py
+```
+
+El script te pedirá que sigas estos pasos:
+
+1.  **Pega el link de YouTube:** Introduce la URL del video o de la playlist que quieres descargar.
+2.  **Elige una opción:**
+    -   `1`: Para descargar la playlist completa.
+    -   `2`: Para descargar solo la canción/video individual.
+
+Los archivos MP3 descargados se guardarán en una nueva carpeta llamada `descargas`.
+
+## Licencia
+
+Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.

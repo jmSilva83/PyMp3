@@ -3,8 +3,6 @@ from pathlib import Path
 import os
 import signal
 
-os.environ["PATH"] += ";C:\\ffmpeg\\bin"
-
 terminar = False
 
 
