@@ -51,6 +51,16 @@ Sigue estos pasos para preparar tu entorno:
         sudo apt-get install ffmpeg
         ```
 
+## Configuración
+
+La primera vez que ejecutes el script, se creará automáticamente un archivo `config.ini` en el mismo directorio. Este archivo te permite personalizar algunas opciones de la descarga.
+
+Puedes editar este archivo para cambiar:
+
+-   `download_folder`: La carpeta donde se guardarán los archivos (por defecto: `descargas`).
+-   `audio_quality`: La calidad del audio en kbps (por defecto: `192`).
+-   `audio_format`: El formato del audio (por defecto: `mp3`).
+
 ## Modo de Uso
 
 Una vez que hayas completado la instalación, puedes ejecutar el script desde tu terminal:

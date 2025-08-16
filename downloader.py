@@ -2,6 +2,7 @@ import yt_dlp
 from pathlib import Path
 import os
 import signal
+import configparser
 
 terminar = False
 
@@ -14,8 +15,37 @@ def signal_handler(sig, frame):
 signal.signal(signal.SIGINT, signal_handler)
 
 
-def descargar_mp3(url, descargar_playlist=False):
-    dest = Path(__file__).parent / "descargas"
+def crear_config_default(config_path):
+    """Crea un archivo de configuración con valores por defecto."""
+    config = configparser.ConfigParser()
+    config['Settings'] = {
+        'download_folder': 'descargas',
+        'audio_quality': '192',
+        'audio_format': 'mp3'
+    }
+    with open(config_path, 'w', encoding='utf-8') as configfile:
+        config.write(configfile)
+    print(f"Se ha creado un archivo de configuración por defecto en: {config_path}")
+    return config
+
+def get_config():
+    """Lee la configuración desde config.ini o la crea si no existe."""
+    config_path = Path(__file__).parent / "config.ini"
+    if not config_path.exists():
+        return crear_config_default(config_path)
+
+    config = configparser.ConfigParser()
+    config.read(config_path, encoding='utf-8')
+    return config
+
+
+def descargar_mp3(url, config, descargar_playlist=False):
+    settings = config['Settings']
+    download_folder = settings.get('download_folder', 'descargas')
+    audio_quality = settings.get('audio_quality', '192')
+    audio_format = settings.get('audio_format', 'mp3')
+
+    dest = Path(__file__).parent / download_folder
     dest.mkdir(parents=True, exist_ok=True)
 
     opciones = {
@@ -25,8 +55,8 @@ def descargar_mp3(url, descargar_playlist=False):
         "postprocessors": [
             {
                 "key": "FFmpegExtractAudio",
-                "preferredcodec": "mp3",
-                "preferredquality": "192",
+                "preferredcodec": audio_format,
+                "preferredquality": audio_quality,
             },
             {
                 "key": "EmbedThumbnail",
@@ -57,6 +87,11 @@ def revisar_descarga(dest, titulo):
 
 
 if __name__ == "__main__":
+    config = get_config()
+    settings = config['Settings']
+    download_folder = settings.get('download_folder', 'descargas')
+    descargas_dir = Path(__file__).parent / download_folder
+
     link = input("Pega el link de YouTube: ")
     print("¿Qué deseas descargar?")
     print("1. Playlist completo")
@@ -65,13 +100,10 @@ if __name__ == "__main__":
 
     if respuesta == "1":
         print("\nDescargando playlist completo...")
-        descargar_mp3(link, descargar_playlist=True)
-        print(f"✅ Descarga completa. Revisa {str(Path(__file__).parent / 'descargas')}")
+        descargar_mp3(link, config=config, descargar_playlist=True)
+        print(f"✅ Descarga completa. Revisa {str(descargas_dir)}")
 
     elif respuesta == "2":
-        descargas_dir = Path(__file__).parent / "descargas"
-        descargas_dir.mkdir(parents=True, exist_ok=True)
-
         titulo = None
         print("\nObteniendo información del video para evitar duplicados...")
         try:
@@ -94,7 +126,7 @@ if __name__ == "__main__":
                 print(f"'{titulo}' no se encontró en la carpeta. Iniciando descarga...")
             else:
                 print("Iniciando descarga...")
-            descargar_mp3(link, descargar_playlist=False)
+            descargar_mp3(link, config=config, descargar_playlist=False)
             print(f"✅ Descarga completa. Revisa {str(descargas_dir)}")
 
     else:
