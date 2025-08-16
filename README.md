@@ -7,11 +7,10 @@ Este es un sencillo script de Python que te permite descargar audio de videos de
 - Descarga de videos individuales o playlists completas.
 - Convierte el audio a formato MP3 con una calidad de 192 kbps.
 - Guarda los archivos en una carpeta `descargas` en el mismo directorio del script.
+- Incrusta la carátula del video en el archivo MP3.
+- Verifica si una canción ya ha sido descargada para evitar duplicados.
 - Manejo de interrupciones con `Ctrl+C` para detener la descarga de forma segura.
 
-## Problemas Conocidos
-
-- **La verificación de duplicados no funciona para canciones individuales:** Al elegir la opción 2 (descargar solo una canción), el script no puede verificar si la canción ya existe y la descargará de nuevo. Esta función sí opera correctamente para playlists completas.
 
 ## Requisitos
 
