@@ -1,146 +1,95 @@
 # Descargador de Audio de YouTube
 
-Este es un sencillo script de Python que te permite descargar audio de videos de YouTube, ya sea una sola canción o una playlist completa. El audio se convierte y guarda en formato MP3.
+Este es un programa de Python que te permite descargar audio de videos de YouTube, con una interfaz de línea de comandos y una interfaz gráfica de usuario.
 
 ## Características
 
-- Descarga de videos individuales o playlists completas.
-- Convierte el audio a formato MP3 con una calidad de 192 kbps.
-- Guarda los archivos en una carpeta `descargas` en el mismo directorio del script.
-- Incrusta la carátula del video en el archivo MP3.
-- Verifica si una canción ya ha sido descargada para evitar duplicados.
-- Manejo de interrupciones con `Ctrl+C` para detener la descarga de forma segura.
-
+-   Descarga de videos individuales o playlists completas.
+-   Conversión a formato de audio configurable (por defecto, MP3 a 192kbps).
+-   Incrusta la carátula del video en el archivo de audio.
+-   Evita descargar archivos duplicados que ya existen.
+-   Interfaz Gráfica (GUI) para un uso fácil e intuitivo.
+-   Selector de carpeta para elegir dónde guardar cada descarga.
+-   Barra de progreso y botón para abrir la carpeta de descargas.
 
 ## Requisitos
 
-Para utilizar este script, necesitas tener instalado lo siguiente:
-
-- Python 3.6 o superior
-- `yt-dlp`: una herramienta de línea de comandos para descargar videos de YouTube y otros sitios.
-- `ffmpeg`: una herramienta esencial para la conversión de audio y video.
+-   Python 3.6 o superior
+-   Dependencias de Python listadas en `requirements.txt`
+-   `ffmpeg`: una herramienta esencial para la conversión de audio y video.
 
 ## Instalación
 
-Sigue estos pasos para preparar tu entorno:
-
 1.  **Clona o descarga este repositorio.**
 
-2.  **Instala las dependencias de Python.**
-    Navega hasta el directorio del proyecto en tu terminal y ejecuta:
+2.  **Instala las dependencias de Python:**
+    Desde la carpeta del proyecto, ejecuta:
     ```bash
     pip install -r requirements.txt
     ```
 
-3.  **Instala `ffmpeg`.**
-    `ffmpeg` es necesario para la conversión de audio. Debes descargarlo y asegurarte de que esté accesible desde la línea de comandos (es decir, que esté en el PATH de tu sistema).
-
-    -   **En Windows:**
-        1.  Descarga `ffmpeg` desde [el sitio oficial](https://ffmpeg.org/download.html).
-        2.  Descomprime el archivo en una ubicación de tu preferencia (por ejemplo, `C:\ffmpeg`).
-        3.  Añade la carpeta `bin` de `ffmpeg` (ej. `C:\ffmpeg\bin`) a la variable de entorno PATH de tu sistema.
-
-    -   **En macOS (usando Homebrew):**
-        ```bash
-        brew install ffmpeg
-        ```
-
-    -   **En Linux (usando `apt` en sistemas Debian/Ubuntu):**
-        ```bash
-        sudo apt-get update
-        sudo apt-get install ffmpeg
-        ```
+3.  **Instala `ffmpeg`:**
+    Sigue las instrucciones de instalación para tu sistema operativo en el [sitio web oficial de ffmpeg](https://ffmpeg.org/download.html) y asegúrate de que esté accesible en el PATH de tu sistema.
 
 ## Configuración
 
-La primera vez que ejecutes el script, se creará automáticamente un archivo `config.ini` en el mismo directorio. Este archivo te permite personalizar algunas opciones de la descarga.
+La primera vez que ejecutes el script, se creará automáticamente un archivo `config.ini`. Puedes editar este archivo para cambiar:
 
-Puedes editar este archivo para cambiar:
-
--   `download_folder`: La carpeta donde se guardarán los archivos (por defecto: `descargas`).
 -   `audio_quality`: La calidad del audio en kbps (por defecto: `192`).
 -   `audio_format`: El formato del audio (por defecto: `mp3`).
 
-## Solución de Problemas
-
--   **[Error de Extracción]**: Este error suele ocurrir si la URL de YouTube es incorrecta, el video ha sido eliminado, o es privado. Verifica el link que estás usando.
--   **[Error de Descarga]**: Aparece si hay un problema al bajar el archivo. Puede ser un problema temporal de red o que el video no esté disponible en el formato de audio solicitado. Intenta de nuevo más tarde.
--   **`ffprobe and ffmpeg not found`**: Este error de `yt-dlp` significa que `ffmpeg` no está instalado o no es accesible desde el PATH de tu sistema. Sigue las instrucciones de la sección "Instalación" para configurarlo correctamente.
-
 ## Modo de Uso
 
-Una vez que hayas completado la instalación, puedes ejecutar el script desde tu terminal:
+Puedes usar este programa de dos maneras:
 
-```bash
-python downloader.py
-```
+### 1. Versión Gráfica (GUI) - Recomendado
 
-El script te pedirá que sigas estos pasos:
-
-1.  **Pega el link de YouTube:** Introduce la URL del video o de la playlist que quieres descargar.
-2.  **Elige una opción:**
-    -   `1`: Para descargar la playlist completa.
-    -   `2`: Para descargar solo la canción/video individual.
-
-Los archivos MP3 descargados se guardarán en la carpeta que hayas configurado en `config.ini`.
-
-### Versión Gráfica (GUI)
-
-Si prefieres una interfaz visual, puedes ejecutar la versión gráfica del programa:
-
+Es la forma más sencilla. Ejecuta el siguiente comando y se abrirá una ventana fácil de usar:
 ```bash
 python gui.py
 ```
+Al presionar "Descargar", se abrirá un explorador de archivos para que elijas dónde guardar el audio. Después de una descarga exitosa, se activará un botón para abrir directamente esa carpeta.
 
-Esto abrirá una ventana donde podrás pegar la URL y seleccionar tus opciones de descarga. Después de una descarga exitosa, se activará un botón para abrir directamente la carpeta de descargas.
+### 2. Línea de Comandos (CLI)
 
-## Pruebas
-
-Este proyecto incluye una suite de pruebas automatizadas para asegurar su correcto funcionamiento. Para ejecutar las pruebas, primero necesitas instalar las dependencias de desarrollo:
-
+Para usuarios avanzados, la versión de línea de comandos sigue disponible:
 ```bash
-pip install -r requirements-dev.txt
+python downloader.py
 ```
-
-Luego, puedes ejecutar las pruebas desde la raíz del repositorio.
-
-**En Linux o macOS:**
-```bash
-PYTHONPATH=. pytest
-```
-
-**En Windows (PowerShell):**
-```powershell
-$env:PYTHONPATH = "."; pytest
-```
-
-**En Windows (CMD):**
-```cmd
-set PYTHONPATH=.; pytest
-```
+El script te guiará para pegar un link y elegir una opción. Los archivos se guardarán por defecto en una carpeta `descargas`.
 
 ## Crear un Ejecutable (Distribución)
 
-Para convertir esta aplicación en un archivo ejecutable (`.exe`) que puedas compartir con usuarios de Windows sin que necesiten instalar Python, puedes seguir estos pasos:
+Para convertir esta aplicación en un programa de escritorio que puedas compartir (un `.exe` en Windows), sigue estos pasos:
 
 1.  **Instala las dependencias de desarrollo:**
-    Asegúrate de tener todas las herramientas necesarias, incluyendo `pyinstaller`.
     ```bash
     pip install -r requirements-dev.txt
     ```
 
 2.  **Ejecuta el script de compilación:**
-    Simplemente haz doble clic en el archivo `build.bat`. Se abrirá una terminal que mostrará el proceso de compilación.
+    Para usuarios de Windows, simplemente haz doble clic en el archivo `build.bat`.
 
 3.  **Encuentra tu aplicación:**
-    Una vez que el proceso termine, encontrarás tu programa (`gui.exe`) dentro de una nueva carpeta llamada `dist`.
+    Una vez que el proceso termine, se creará una carpeta `dist/PyMp3`. Dentro de esta carpeta está tu programa (`PyMp3.exe`) y todos los archivos que necesita.
 
 4.  **Prepara la distribución:**
-    Para que otros puedan usarlo, crea una carpeta y copia dos archivos dentro:
-    *   `gui.exe` (desde la carpeta `dist`)
-    *   `ffmpeg.exe` (que debes descargar por separado de su [sitio web oficial](https://ffmpeg.org/download.html))
+    Copia el archivo `ffmpeg.exe` (que debes descargar por separado) y pégalo dentro de la carpeta `dist/PyMp3`. Ahora puedes comprimir la carpeta `dist/PyMp3` completa en un archivo ZIP y compartirla.
 
-    Puedes comprimir esta carpeta en un archivo ZIP y compartirla. ¡Cualquiera podrá ejecutar `gui.exe` directamente sin instalar nada más!
+## Pruebas
+
+Este proyecto incluye pruebas automatizadas. Para ejecutarlas:
+
+1.  **Instala las dependencias de desarrollo:**
+    ```bash
+    pip install -r requirements-dev.txt
+    ```
+
+2.  **Ejecuta las pruebas:**
+    Desde la raíz del proyecto, ejecuta el comando correspondiente a tu sistema operativo:
+    -   **Linux/macOS:** `PYTHONPATH=. pytest`
+    -   **Windows (CMD):** `set PYTHONPATH=.; pytest`
+    -   **Windows (PowerShell):** `$env:PYTHONPATH = "."; pytest`
 
 ## Licencia
 

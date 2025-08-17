@@ -2,7 +2,7 @@
 echo Building executable...
 echo This might take a moment.
 
-pyinstaller --noconfirm --onefile --windowed --icon=NONE gui.py
+pyinstaller --noconfirm --windowed --name PyMp3 --icon=NONE gui.py
 
 echo.
 echo =================================================================

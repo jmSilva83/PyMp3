@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, scrolledtext
+from tkinter import ttk, scrolledtext, filedialog
 import threading
 import downloader
 import queue
@@ -15,6 +15,7 @@ class DownloaderApp:
         self.root.resizable(False, False)
 
         self.progress_queue = queue.Queue()
+        self.last_download_path = None
 
         # Style
         style = ttk.Style(self.root)
@@ -88,9 +89,14 @@ class DownloaderApp:
             self.root.after(100, self.process_queue)
 
     def start_download(self):
-        url = self.url_entry.get()
+        url = self.url_var.get()
         if not url:
             self.log("Por favor, introduce una URL de YouTube.")
+            return
+
+        destination_folder = filedialog.askdirectory(title="Selecciona una carpeta para guardar el audio")
+        if not destination_folder:
+            self.log("Descarga cancelada. No se seleccionó ninguna carpeta.")
             return
 
         self.download_button.config(state="disabled")
@@ -98,14 +104,14 @@ class DownloaderApp:
         self.log("Iniciando descarga...")
 
         # Run the download in a separate thread
-        thread = threading.Thread(target=self.download_worker, args=(url,))
+        thread = threading.Thread(target=self.download_worker, args=(url, destination_folder))
         thread.daemon = True
         thread.start()
 
         # Start processing the queue for progress updates
         self.process_queue()
 
-    def download_worker(self, url):
+    def download_worker(self, url, destination_folder):
         try:
             is_playlist = self.download_type.get() == "playlist"
             config = downloader.get_config()
@@ -115,14 +121,15 @@ class DownloaderApp:
 
             if is_playlist:
                 self.log("Descargando playlist completa...")
-                downloader.descargar_mp3(url, config=config, descargar_playlist=True, progress_hook=hook)
+                downloader.descargar_mp3(url, config=config, destination_folder=destination_folder, descargar_playlist=True, progress_hook=hook)
             else:
                 self.log("Descargando canción...")
-                downloader.descargar_mp3(url, config=config, descargar_playlist=False, progress_hook=hook)
+                downloader.descargar_mp3(url, config=config, destination_folder=destination_folder, descargar_playlist=False, progress_hook=hook)
 
             if not self.progress_bar['value'] == 100:
                  self.progress_queue.put({'status': 'finished'})
 
+            self.last_download_path = destination_folder
             self.log("✅ ¡Descarga completa!")
             self.root.after(0, self.enable_open_folder_button)
 
@@ -148,10 +155,11 @@ class DownloaderApp:
         self.status_text.see(tk.END)
 
     def open_download_folder(self):
-        config = downloader.get_config()
-        download_folder = config['Settings'].get('download_folder', 'descargas')
-        path = downloader.Path(download_folder).resolve()
+        if not self.last_download_path:
+            self.log("Aún no se ha completado ninguna descarga en esta sesión.")
+            return
 
+        path = downloader.Path(self.last_download_path)
         try:
             if not path.is_dir():
                 self.log(f"Error: La carpeta de descargas '{path}' no existe.")

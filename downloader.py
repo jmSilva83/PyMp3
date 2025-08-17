@@ -21,7 +21,6 @@ def crear_config_default(config_path):
     """Crea un archivo de configuración con valores por defecto."""
     config = configparser.ConfigParser()
     config['Settings'] = {
-        'download_folder': 'descargas',
         'audio_quality': '192',
         'audio_format': 'mp3'
     }
@@ -41,13 +40,12 @@ def get_config():
     return config
 
 
-def descargar_mp3(url, config, descargar_playlist=False, progress_hook=None):
+def descargar_mp3(url, config, destination_folder, descargar_playlist=False, progress_hook=None):
     settings = config['Settings']
-    download_folder = settings.get('download_folder', 'descargas')
     audio_quality = settings.get('audio_quality', '192')
     audio_format = settings.get('audio_format', 'mp3')
 
-    dest = Path(__file__).parent / download_folder
+    dest = Path(destination_folder)
     dest.mkdir(parents=True, exist_ok=True)
 
     opciones = {
@@ -101,10 +99,6 @@ def descargar_mp3(url, config, descargar_playlist=False, progress_hook=None):
 
 def main():
     config = get_config()
-    settings = config['Settings']
-    download_folder = settings.get('download_folder', 'descargas')
-    descargas_dir = Path(__file__).parent / download_folder
-
     link = input("Pega el link de YouTube: ")
     print("¿Qué deseas descargar?")
     print("1. Playlist completo")
@@ -112,14 +106,16 @@ def main():
     respuesta = input("Opción: ")
 
     if respuesta == "1":
+        dest_folder = Path(__file__).parent / "descargas"
         print("\nDescargando playlist completo...")
-        descargar_mp3(link, config=config, descargar_playlist=True)
-        print(f"✅ Descarga completa. Revisa {str(descargas_dir)}")
+        descargar_mp3(link, config=config, destination_folder=str(dest_folder), descargar_playlist=True)
+        print(f"✅ Descarga completa. Revisa {str(dest_folder)}")
 
     elif respuesta == "2":
+        dest_folder = Path(__file__).parent / "descargas"
         print("\nDescargando canción...")
-        descargar_mp3(link, config=config, descargar_playlist=False)
-        print(f"✅ Descarga completa. Revisa {str(descargas_dir)}")
+        descargar_mp3(link, config=config, destination_folder=str(dest_folder), descargar_playlist=False)
+        print(f"✅ Descarga completa. Revisa {str(dest_folder)}")
 
     else:
         print("\nOpción inválida. Saliendo...")

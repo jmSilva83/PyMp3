@@ -15,7 +15,9 @@ def mock_common(mocker):
     mocker.patch('downloader.get_config', return_value=mock_config)
 
     mock_path_instance = MagicMock()
-    mock_path_instance.__str__.return_value = 'test_downloads'
+    # The main() function hardcodes the CLI download path to './descargas'
+    # We mock the result of str(Path(...)) to reflect this.
+    mock_path_instance.__str__.return_value = str(downloader.Path(__file__).parent / 'descargas')
     mock_path_instance.parent = mock_path_instance
     mock_path_instance.__truediv__.return_value = mock_path_instance
     mocker.patch('downloader.Path', return_value=mock_path_instance)
@@ -33,8 +35,9 @@ def test_download_single_song(mocker, mock_common):
 
     downloader.main()
 
-    mock_descargar.assert_called_once_with('some_url', config=mock_config, descargar_playlist=False)
-    mock_print.assert_any_call("✅ Descarga completa. Revisa test_downloads")
+    expected_dest = str(downloader.Path(__file__).parent / 'descargas')
+    mock_descargar.assert_called_once_with('some_url', config=mock_config, destination_folder=expected_dest, descargar_playlist=False)
+    mock_print.assert_any_call(f"✅ Descarga completa. Revisa {expected_dest}")
 
 def test_download_playlist(mocker, mock_common):
     """
@@ -45,8 +48,9 @@ def test_download_playlist(mocker, mock_common):
 
     downloader.main()
 
-    mock_descargar.assert_called_once_with('some_url', config=mock_config, descargar_playlist=True)
-    mock_print.assert_any_call("✅ Descarga completa. Revisa test_downloads")
+    expected_dest = str(downloader.Path(__file__).parent / 'descargas')
+    mock_descargar.assert_called_once_with('some_url', config=mock_config, destination_folder=expected_dest, descargar_playlist=True)
+    mock_print.assert_any_call(f"✅ Descarga completa. Revisa {expected_dest}")
 
 def test_invalid_option(mocker):
     """
