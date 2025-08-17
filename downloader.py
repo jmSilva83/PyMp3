@@ -2,6 +2,7 @@ import yt_dlp
 from yt_dlp.utils import DownloadError, ExtractorError
 from pathlib import Path
 import os
+import sys
 import signal
 import configparser
 
@@ -65,6 +66,13 @@ def descargar_mp3(url, config, descargar_playlist=False, progress_hook=None):
             },
         ],
     }
+
+    # Auto-detect local ffmpeg when running as a bundled exe
+    if getattr(sys, 'frozen', False):
+        base_path = Path(sys.executable).parent
+        ffmpeg_path = base_path / 'ffmpeg.exe'
+        if ffmpeg_path.exists():
+            opciones['ffmpeg_location'] = str(ffmpeg_path)
 
     if not descargar_playlist:
         opciones["noplaylist"] = True

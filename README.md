@@ -119,6 +119,29 @@ $env:PYTHONPATH = "."; pytest
 set PYTHONPATH=.; pytest
 ```
 
+## Crear un Ejecutable (Distribución)
+
+Para convertir esta aplicación en un archivo ejecutable (`.exe`) que puedas compartir con usuarios de Windows sin que necesiten instalar Python, puedes seguir estos pasos:
+
+1.  **Instala las dependencias de desarrollo:**
+    Asegúrate de tener todas las herramientas necesarias, incluyendo `pyinstaller`.
+    ```bash
+    pip install -r requirements-dev.txt
+    ```
+
+2.  **Ejecuta el script de compilación:**
+    Simplemente haz doble clic en el archivo `build.bat`. Se abrirá una terminal que mostrará el proceso de compilación.
+
+3.  **Encuentra tu aplicación:**
+    Una vez que el proceso termine, encontrarás tu programa (`gui.exe`) dentro de una nueva carpeta llamada `dist`.
+
+4.  **Prepara la distribución:**
+    Para que otros puedan usarlo, crea una carpeta y copia dos archivos dentro:
+    *   `gui.exe` (desde la carpeta `dist`)
+    *   `ffmpeg.exe` (que debes descargar por separado de su [sitio web oficial](https://ffmpeg.org/download.html))
+
+    Puedes comprimir esta carpeta en un archivo ZIP y compartirla. ¡Cualquiera podrá ejecutar `gui.exe` directamente sin instalar nada más!
+
 ## Licencia
 
 Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.
