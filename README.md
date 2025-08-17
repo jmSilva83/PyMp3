@@ -82,7 +82,42 @@ El script te pedirá que sigas estos pasos:
     -   `1`: Para descargar la playlist completa.
     -   `2`: Para descargar solo la canción/video individual.
 
-Los archivos MP3 descargados se guardarán en una nueva carpeta llamada `descargas`.
+Los archivos MP3 descargados se guardarán en la carpeta que hayas configurado en `config.ini`.
+
+### Versión Gráfica (GUI)
+
+Si prefieres una interfaz visual, puedes ejecutar la versión gráfica del programa:
+
+```bash
+python gui.py
+```
+
+Esto abrirá una ventana donde podrás pegar la URL y seleccionar tus opciones de descarga. Después de una descarga exitosa, se activará un botón para abrir directamente la carpeta de descargas.
+
+## Pruebas
+
+Este proyecto incluye una suite de pruebas automatizadas para asegurar su correcto funcionamiento. Para ejecutar las pruebas, primero necesitas instalar las dependencias de desarrollo:
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+Luego, puedes ejecutar las pruebas desde la raíz del repositorio.
+
+**En Linux o macOS:**
+```bash
+PYTHONPATH=. pytest
+```
+
+**En Windows (PowerShell):**
+```powershell
+$env:PYTHONPATH = "."; pytest
+```
+
+**En Windows (CMD):**
+```cmd
+set PYTHONPATH=.; pytest
+```
 
 ## Licencia
 

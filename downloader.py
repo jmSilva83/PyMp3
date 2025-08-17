@@ -40,7 +40,7 @@ def get_config():
     return config
 
 
-def descargar_mp3(url, config, descargar_playlist=False):
+def descargar_mp3(url, config, descargar_playlist=False, progress_hook=None):
     settings = config['Settings']
     download_folder = settings.get('download_folder', 'descargas')
     audio_quality = settings.get('audio_quality', '192')
@@ -53,6 +53,7 @@ def descargar_mp3(url, config, descargar_playlist=False):
         "format": "bestaudio/best",
         "outtmpl": str(dest / "%(title)s.%(ext)s"),
         "writethumbnail": True,
+        "nooverwrites": True,
         "postprocessors": [
             {
                 "key": "FFmpegExtractAudio",
@@ -67,6 +68,9 @@ def descargar_mp3(url, config, descargar_playlist=False):
 
     if not descargar_playlist:
         opciones["noplaylist"] = True
+
+    if progress_hook:
+        opciones['progress_hooks'] = [progress_hook]
 
     with yt_dlp.YoutubeDL(opciones) as ydl:
         while not terminar:
@@ -87,15 +91,7 @@ def descargar_mp3(url, config, descargar_playlist=False):
                     break
 
 
-def revisar_descarga(dest, titulo):
-    archivos = [f for f in dest.iterdir() if f.is_file()]
-    for archivo in archivos:
-        if archivo.name.startswith(titulo):
-            return True
-    return False
-
-
-if __name__ == "__main__":
+def main():
     config = get_config()
     settings = config['Settings']
     download_folder = settings.get('download_folder', 'descargas')
@@ -113,37 +109,14 @@ if __name__ == "__main__":
         print(f"✅ Descarga completa. Revisa {str(descargas_dir)}")
 
     elif respuesta == "2":
-        titulo = None
-        print("\nObteniendo información del video para evitar duplicados...")
-        try:
-            ydl_opts = {
-                'quiet': True,
-                'socket_timeout': 15,
-                'noplaylist': True,
-            }
-            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                info = ydl.extract_info(link, download=False)
-                titulo = info.get("title", None)
-        except ExtractorError:
-            print("\n[Error de Extracción] No se pudo obtener la información de la URL.")
-            print("Puede que el link sea incorrecto, o el video sea privado o no exista.")
-            print("Se procederá a descargar sin verificar duplicados.")
-            titulo = None
-        except Exception as e:
-            print(f"\n[Error Inesperado] No se pudo verificar el título del video (Error: {e}).")
-            print("Se procederá a descargar sin verificar duplicados.")
-            titulo = None
-
-        if titulo and revisar_descarga(descargas_dir, titulo):
-            print(f"\nLa canción '{titulo}' ya existe en la carpeta de descarga. No se descargará.")
-        else:
-            if titulo:
-                print(f"'{titulo}' no se encontró en la carpeta. Iniciando descarga...")
-            else:
-                print("Iniciando descarga...")
-            descargar_mp3(link, config=config, descargar_playlist=False)
-            print(f"✅ Descarga completa. Revisa {str(descargas_dir)}")
+        print("\nDescargando canción...")
+        descargar_mp3(link, config=config, descargar_playlist=False)
+        print(f"✅ Descarga completa. Revisa {str(descargas_dir)}")
 
     else:
         print("\nOpción inválida. Saliendo...")
         exit()
+
+
+if __name__ == "__main__":
+    main()
