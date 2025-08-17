@@ -61,6 +61,12 @@ Puedes editar este archivo para cambiar:
 -   `audio_quality`: La calidad del audio en kbps (por defecto: `192`).
 -   `audio_format`: El formato del audio (por defecto: `mp3`).
 
+## Solución de Problemas
+
+-   **[Error de Extracción]**: Este error suele ocurrir si la URL de YouTube es incorrecta, el video ha sido eliminado, o es privado. Verifica el link que estás usando.
+-   **[Error de Descarga]**: Aparece si hay un problema al bajar el archivo. Puede ser un problema temporal de red o que el video no esté disponible en el formato de audio solicitado. Intenta de nuevo más tarde.
+-   **`ffprobe and ffmpeg not found`**: Este error de `yt-dlp` significa que `ffmpeg` no está instalado o no es accesible desde el PATH de tu sistema. Sigue las instrucciones de la sección "Instalación" para configurarlo correctamente.
+
 ## Modo de Uso
 
 Una vez que hayas completado la instalación, puedes ejecutar el script desde tu terminal:

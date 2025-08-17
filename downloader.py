@@ -1,4 +1,5 @@
 import yt_dlp
+from yt_dlp.utils import DownloadError, ExtractorError
 from pathlib import Path
 import os
 import signal
@@ -72,8 +73,16 @@ def descargar_mp3(url, config, descargar_playlist=False):
             try:
                 ydl.download([url])
                 break
+            except DownloadError:
+                print(f"\n[Error de Descarga] No se pudo bajar el video.")
+                print("El video podría no estar disponible en el formato solicitado o puede haber un problema de red.")
+                break
+            except ExtractorError:
+                print(f"\n[Error de Extracción] No se pudo procesar la URL.")
+                print("Verifica si la URL es correcta o si el video es privado o restringido.")
+                break
             except Exception as e:
-                print(f"Error: {e}")
+                print(f"\n[Error Inesperado] Ocurrió un problema: {e}")
                 if terminar:
                     break
 
@@ -109,15 +118,21 @@ if __name__ == "__main__":
         try:
             ydl_opts = {
                 'quiet': True,
-                'socket_timeout': 15,  # 15 segundos de tiempo de espera
-                'noplaylist': True,    # Asegurarse de procesar solo el video
+                'socket_timeout': 15,
+                'noplaylist': True,
             }
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(link, download=False)
                 titulo = info.get("title", None)
-        except Exception as e:
-            print(f"No se pudo verificar el título del video (Error: {e}).")
+        except ExtractorError:
+            print("\n[Error de Extracción] No se pudo obtener la información de la URL.")
+            print("Puede que el link sea incorrecto, o el video sea privado o no exista.")
             print("Se procederá a descargar sin verificar duplicados.")
+            titulo = None
+        except Exception as e:
+            print(f"\n[Error Inesperado] No se pudo verificar el título del video (Error: {e}).")
+            print("Se procederá a descargar sin verificar duplicados.")
+            titulo = None
 
         if titulo and revisar_descarga(descargas_dir, titulo):
             print(f"\nLa canción '{titulo}' ya existe en la carpeta de descarga. No se descargará.")
